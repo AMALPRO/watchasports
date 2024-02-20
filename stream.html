@@ -1,52 +1,56 @@
-    <script src="//ssl.p.jwpcdn.com/player/v/8.22.0/jwplayer.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
+<script src="//ssl.p.jwpcdn.com/player/v/8.22.0/jwplayer.js" type="text/javascript"></script>
+<script type="text/javascript">
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
 
-        jwplayer.key = "XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo";
-        
-        var data = jwplayer("player");
+    jwplayer.key = "XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo";
 
-        var idParameter = getParameterByName('id');
+    var data = jwplayer("player");
 
-        data.setup({
-            playlist: [{
-                "title": "",
-                 "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmul0Oa2-x5EL7G3qO92cS_cCYBbkUPBAsVt6YdWR_51O4AIZhpfGFZvVOftlw2k9h_BoTx3sCr2IcgmX4fOP6wofDYGwxzAf-clE5F1Hj9_ps1sM5Yx9JNB3SyZRXbBmi53uCQ9vcyxz3Cg4FPUzT6V3-bQb22FIMLIl599jbxJbG491kT2CEGnlAENJs/s1280/Black%20Minimalist%20Gaming%20Live%20Stream%20YouTube%20Thumbnail.png",
-                "sources": [{
-                    "default": false,
-                    "type": "dash",
-                    "file": `https://dcf-ak-livedazn.akamaized.net/dashrdm/dazn-linear-${idParameter}/stream.mpd`,
-                    "drm": {
-                        "clearkey": { "keyId": "82f8e2a17dac44c0a18f660479349c59", "key": "1b144f73e6fefe91cd05f850e2b589d0" }
-                    },
-                }]
-            }],
-            width: "100%",
-            height: "100%",
-            aspectratio: "16:9",
-            autostart: false,
-            cast: {},
-            sharing: {}
-        });
+    var idParameter = getParameterByName('id');
 
-        data.on("play", function (e) {
-            data.setCurrentAudioTrack(1);
-        });
-    </script>
-    <a href="javascript:document.location.reload();" onclick="window.open('https://chat.whatsapp.com/BaNnmK6VM4UEsHtbfowtjJ', '_blank')">
-  <span style="position:absolute;z-index: 100; top:5px; right:5px; height:20px; width:100px; color:#ccc; border:2px solid #ccc;padding:1px 0;border-radius:2px; text-align:center"><i class="fa fa-refresh" aria-hidden="true"></i>Join Us</span></a>
-  
-  
-  <script type="text/javascript">
-//<![CDATA[
+    data.setup({
+        playlist: [{
+            "title": "",
+            "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmul0Oa2-x5EL7G3qO92cS_cCYBbkUPBAsVt6YdWR_51O4AIZhpfGFZvVOftlw2k9h_BoTx3sCr2IcgmX4fOP6wofDYGwxzAf-clE5F1Hj9_ps1sM5Yx9JNB3SyZRXbBmi53uCQ9vcyxz3Cg4FPUzT6V3-bQb22FIMLIl599jbxJbG491kT2CEGnlAENJs/s1280/Black%20Minimalist%20Gaming%20Live%20Stream%20YouTube%20Thumbnail.png",
+            "sources": [{
+                "default": false,
+                "type": "dash",
+                "file": `https://dcf-ak-livedazn.akamaized.net/dashrdm/dazn-linear-${idParameter}/stream.mpd`,
+                "drm": {
+                    "clearkey": { "keyId": "82f8e2a17dac44c0a18f660479349c59", "key": "1b144f73e6fefe91cd05f850e2b589d0" }
+                },
+            }]
+        }],
+        width: "100%",
+        height: "100%",
+        aspectratio: "16:9",
+        autostart: false,
+        cast: {},
+        sharing: {}
+    });
+
+    data.on("play", function (e) {
+        data.setCurrentAudioTrack(1);
+    });
+</script>
+
+<a href="javascript:location.reload();" onclick="window.open('https://chat.whatsapp.com/BaNnmK6VM4UEsHtbfowtjJ', '_blank')">
+    <span style="position:absolute;z-index: 100; top:5px; right:5px; height:20px; width:100px; color:#ccc; border:2px solid #ccc;padding:1px 0;border-radius:2px; text-align:center">
+        <i class="fa fa-refresh" aria-hidden="true"></i> Join Us
+    </span>
+</a>
+
+<script type="text/javascript">
+    // Your existing code for redirectCU and redirectKK
+    //<![CDATA[
 function redirectCU(e) {
   if (e.ctrlKey && e.which == 85) {
     window.location.replace("https://www.google.com/");
@@ -62,4 +66,4 @@ function redirectKK(e) {
 }
 document.oncontextmenu = redirectKK;
 //]]>
-  </script>
+</script>
