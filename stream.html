@@ -2,50 +2,43 @@
 
 <div id="jwplayerDiv"></div>
 
-<script>	
-function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
+<script>
+  // Function to get URL parameters
+  function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  // Get the "id" parameter from the URL
+  var idParameter = getParameterByName('id');
+
+  jwplayer("jwplayerDiv").setup({
+    file: "https://dcf-ak-livedazn.akamaized.net/dashrdm/dazn-linear-" + idParameter + "/stream.mpd",
+    type: "dash",
+    height: '100%',
+    width: '100%',
+    aspectratio: '16:9',
+    autostart: false,
+    image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmul0Oa2-x5EL7G3qO92cS_cCYBbkUPBAsVt6YdWR_51O4AIZhpfGFZvVOftlw2k9h_BoTx3sCr2IcgmX4fOP6wofDYGwxzAf-clE5F1Hj9_ps1sM5Yx9JNB3SyZRXbBmi53uCQ9vcyxz3Cg4FPUzT6V3-bQb22FIMLIl599jbxJbG491kT2CEGnlAENJs/s1280/Black%20Minimalist%20Gaming%20Live%20Stream%20YouTube%20Thumbnail.png",
+    drm: {
+      clearkey: {
+        key: '1b144f73e6fefe91cd05f850e2b589d0',
+        keyId: '82f8e2a17dac44c0a18f660479349c59'
+      }
     }
+  });
 
-jwplayer("jwplayerDiv").setup({
-
-    //playlist: [{
-
-        file: "https://dcf-ak-livedazn.akamaized.net/dashrdm/dazn-linear-${idParameter}/stream.mpd",
-
-	  type: "dash",
-
-      height: '450',
-
-      width:'100%',
-      
-      aspectratio: '16:9',
-      
-      autostart: false,
-      
-      image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmul0Oa2-x5EL7G3qO92cS_cCYBbkUPBAsVt6YdWR_51O4AIZhpfGFZvVOftlw2k9h_BoTx3sCr2IcgmX4fOP6wofDYGwxzAf-clE5F1Hj9_ps1sM5Yx9JNB3SyZRXbBmi53uCQ9vcyxz3Cg4FPUzT6V3-bQb22FIMLIl599jbxJbG491kT2CEGnlAENJs/s1280/Black%20Minimalist%20Gaming%20Live%20Stream%20YouTube%20Thumbnail.png",
-      
-
-	    drm: {
-
-	        clearkey: {
-
-	          key: '1b144f73e6fefe91cd05f850e2b589d0',
-
-	          keyId: '82f8e2a17dac44c0a18f660479349c59'
-
-	        }
-
-	      }
-
-   // }]
-
-});
-
+  jwplayer().on("play", function (e) {
+    jwplayer().setCurrentAudioTrack(1);
+  });
 </script>
+<a href="https://chat.whatsapp.com/BaNnmK6VM4UEsHtbfowtjJ" target="_blank">
+<span style="position: absolute; z-index: 100; top: 6px; left: 5px; height: 30px; width: 100px; color: rgb(204, 204, 204); border: 2px solid rgb(204, 204, 204); padding: 1px 0px; border-radius: 2px; text-align: center;">
+Join us
+</span>
+</a>
