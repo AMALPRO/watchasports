@@ -1,0 +1,61 @@
+<script>
+// Function to get parameter from URL
+function getParameterByName(name) {
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(window.location.href);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+// Configuration for channels
+var ConfiguracionCanales = {
+    "USANETWORK": {
+        url: "//fsly.stream.peacocktv.com/Content/CMAF_OL1-CTR-4s/Live/channel(usa-east)/master.mpd",
+        k1: "882c9f5613b43b47adc70aa968a308ce",
+        k2: "de534ef8914bfe62ba3cdd6bdb9e1c04"
+    }
+};
+
+// Get channel ID from the URL parameter
+var id = getParameterByName('id');
+var config = ConfiguracionCanales[id];
+
+// If configuration exists for the given ID
+if (config) {
+    var sources = [];
+
+    // Check if the URL includes .m3u8
+    if (config.url.includes('.m3u8')) {
+        sources.push({
+            file: config.url
+        });
+    }
+
+    // Check if the URL includes .mpd and has k1 and k2 values
+    if (config.url.includes('.mpd') && config.k1 && config.k2) {
+        sources.push({
+            file: config.url,
+            drm: { "clearkey": { "keyId": config.k1, "key": config.k2 } }
+        });
+    }
+
+    // Setup JWPlayer
+    jwplayer("player").setup({
+        playlist: [{
+            image: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmul0Oa2-x5EL7G3qO92cS_cCYBbkUPBAsVt6YdWR_51O4AIZhpfGFZvVOftlw2k9h_BoTx3sCr2IcgmX4fOP6wofDYGwxzAf-clE5F1Hj9_ps1sM5Yx9JNB3SyZRXbBmi53uCQ9vcyxz3Cg4FPUzT6V3-bQb22FIMLIl599jbxJbG491kT2CEGnlAENJs/s1280/Black%20Minimalist%20Gaming%20Live%20Stream%20YouTube%20Thumbnail.png",
+            title: "",
+            description: "",
+            sources: sources
+        }],
+        autostart: false,
+        width: "100%",
+        height: "100%",
+        stretching: "exactfit",
+        aspectratio: "16:9",
+        cast: {},
+        sharing: {}
+    });
+}
+</script>
