@@ -1,3 +1,4 @@
+
 <script src="https://content.jwplatform.com/libraries/Z79JsmAO.js"></script>
 <script>
 // Function to get parameter from URL
@@ -59,4 +60,10 @@ if (config) {
         sharing: {}
     });
 }
+
+
+  jwplayer().on("play", function (e) {
+    jwplayer().setCurrentAudioTrack(1);
+  });
 </script>
+
