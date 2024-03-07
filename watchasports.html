@@ -1,5 +1,7 @@
-
 <script src="https://content.jwplatform.com/libraries/Z79JsmAO.js"></script>
+
+<div id="player"></div>
+
 <script>
 // Function to get parameter from URL
 function getParameterByName(name) {
@@ -7,8 +9,7 @@ function getParameterByName(name) {
     var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
         results = regex.exec(window.location.href);
     if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+    return !results[2] ? '' : decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
 // Configuration for channels
@@ -30,9 +31,7 @@ if (config) {
 
     // Check if the URL includes .m3u8
     if (config.url.includes('.m3u8')) {
-        sources.push({
-            file: config.url
-        });
+        sources.push({ file: config.url });
     }
 
     // Check if the URL includes .mpd and has k1 and k2 values
@@ -59,11 +58,10 @@ if (config) {
         cast: {},
         sharing: {}
     });
+
+    // Use 'player' instead of 'jwplayer()'
+    jwplayer("player").on("play", function (e) {
+        jwplayer("player").setCurrentAudioTrack(1);
+    });
 }
-
-
-  jwplayer().on("play", function (e) {
-    jwplayer().setCurrentAudioTrack(1);
-  });
 </script>
-
