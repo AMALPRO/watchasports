@@ -1,0 +1,13 @@
+<video id="video-player" allowfullscreen="yes" autoplay="0" controls="" frameborder="0" height="100%" marginheight="0" marginwidth="0" poster="" scrolling="no" type="application/x-mpegURL" width="100%"></video>
+<script>
+const videoPlayer = document.getElementById("video-player");
+const urlParams = new URLSearchParams(window.location.search);
+const videoSrc = urlParams.get("get");
+
+if (videoSrc) {
+  videoPlayer.src = videoSrc;
+} else {
+  console.error("Missing video source in URL parameters");
+}
+
+</script>
