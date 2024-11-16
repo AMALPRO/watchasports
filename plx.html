@@ -4,7 +4,13 @@
     <title>WATCHASPORTS.ONLINE</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.6.2/dist/plyr.css" />
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
     <style>
         html {
             font-family: Poppins;
@@ -71,103 +77,95 @@
     </div>
 
     <video id="player" autoplay controls crossorigin playsinline style="--plyr-color-main: #28B463;">
+        <source id="m3u8-url" type="application/x-mpegURL" />
     </video>
 
-    <script src="https://cdn.jsdelivr.net/npm/plyr@3.6.12/dist/plyr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.1.4/dist/hls.min.js"></script>
-
     <script>
-        // Prevent right-click
-        document.addEventListener("contextmenu", e => e.preventDefault());
-        
         // Hide loading screen after 1 second
         setTimeout(() => {
             document.getElementById('loading').style.display = 'none';
         }, 1000);
 
-        // Get M3U8 URL from query parameter
+        // Get stream URL from query parameter
         const urlParams = new URLSearchParams(window.location.search);
         const streamUrl = urlParams.get('dtv');
+        document.getElementById("m3u8-url").setAttribute("src", streamUrl);
 
-        // Initialize player
         document.addEventListener("DOMContentLoaded", () => {
-            const video = document.getElementById('player');
-            const defaultOptions = {
-                controls: [
-                    'play-large',
-                    'play',
-                    'progress',
-                    'current-time',
-                    'mute',
-                    'volume',
-                    'settings',
-                    'fullscreen'
-                ]
+            const video = document.querySelector("video");
+            const source = video.getElementsByTagName("source")[0].src;
+            
+            // Enhanced HLS.js configuration for DAI streams
+            const hlsConfig = {
+                maxMaxBufferLength: 100,
+                xhrSetup: function(xhr, url) {
+                    // Enable CORS
+                    xhr.withCredentials = true;
+                },
+                enableWorker: true,
+                lowLatencyMode: true,
+                backBufferLength: 90,
+                // Add specific handling for Google DAI streams
+                fragLoadingMaxRetry: 5,
+                manifestLoadingMaxRetry: 5,
+                levelLoadingMaxRetry: 5
             };
 
             if (Hls.isSupported()) {
-                const hls = new Hls({
-                    xhrSetup: function(xhr, url) {
-                        xhr.withCredentials = false; // Important for Google DAI streams
-                    },
-                    maxMaxBufferLength: 100,
-                    maxBufferSize: 30 * 1000 * 1000, // 30MB
-                    maxBufferLength: 30,
-                    enableWorker: true,
-                    lowLatencyMode: true,
-                    backBufferLength: 90
-                });
-
-                hls.loadSource(streamUrl);
-                hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                    const qualities = hls.levels.map(level => level.height);
-                    defaultOptions.quality = {
-                        default: qualities[qualities.length - 1],
-                        options: qualities,
-                        forced: true,
-                        onChange: (quality) => {
-                            hls.levels.forEach((level, levelIndex) => {
-                                if (level.height === quality) {
-                                    hls.currentLevel = levelIndex;
-                                }
-                            });
-                        }
-                    };
-                    
-                    const player = new Plyr(video, defaultOptions);
-                    
-                    // Handle player errors
-                    player.on('error', (error) => {
-                        console.error('Player error:', error);
-                        // Attempt to recover from error
-                        hls.recoverMediaError();
-                    });
-                });
-
+                const hls = new Hls(hlsConfig);
+                
+                // Error handling
                 hls.on(Hls.Events.ERROR, function(event, data) {
                     if (data.fatal) {
                         switch (data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.log('Network error, trying to recover...');
+                                console.log("Network error, attempting to recover...");
                                 hls.startLoad();
                                 break;
                             case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.log('Media error, trying to recover...');
+                                console.log("Media error, attempting to recover...");
                                 hls.recoverMediaError();
                                 break;
                             default:
-                                console.log('Unrecoverable error');
+                                console.log("Fatal error, stopping playback");
                                 hls.destroy();
                                 break;
                         }
                     }
                 });
-                
+
+                // Load source and initialize player
+                hls.loadSource(source);
+                hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
+                    const qualities = hls.levels.map(level => level.height);
+                    
+                    const playerConfig = {
+                        quality: {
+                            default: qualities[0],
+                            options: qualities,
+                            forced: true,
+                            onChange: (quality) => {
+                                hls.levels.forEach((level, levelIndex) => {
+                                    if (level.height === quality) {
+                                        hls.currentLevel = levelIndex;
+                                    }
+                                });
+                            }
+                        },
+                        seekTime: 5
+                    };
+
+                    new Plyr(video, playerConfig);
+                });
+
                 hls.attachMedia(video);
                 window.hls = hls;
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                // For Safari
-                video.src = streamUrl;
+                // Fallback for Safari
+                video.src = source;
+                new Plyr(video, {
+                    seekTime: 5
+                });
             }
         });
     </script>
