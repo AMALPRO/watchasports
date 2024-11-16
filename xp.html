@@ -1,55 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>WatchaSports Premium Player</title>
+    <title>WatchaSports Player</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.7.8/plyr.css"/>
     <style>
-        :root {
-            --primary-color: #28B463;
-            --background-color: #000000;
-            --text-color: #ffffff;
-        }
-
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--background-color);
-            color: var(--text-color);
-            min-height: 100vh;
+            background: #000;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-        }
-
-        .player-container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            background: #000;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .video-wrapper video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
         }
 
         .loading {
@@ -58,7 +21,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--background-color);
+            background: #000;
             z-index: 9999;
             display: flex;
             justify-content: center;
@@ -66,46 +29,16 @@
         }
 
         .loading-text {
-            display: flex;
-            gap: 5px;
+            text-align: center;
         }
 
-        .loading-text-words {
-            color: var(--primary-color);
-            font-size: 2rem;
-            animation: bounce 1.5s infinite;
-        }
-
-        .controls-overlay {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 2;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 4px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .quality-selector {
-            background: rgba(40, 180, 99, 0.8);
-            color: white;
-            border: none;
-            padding: 5px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .stats-panel {
-            position: absolute;
-            bottom: 60px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            display: none;
+        .loading-text span {
+            display: inline-block;
+            margin: 0 5px;
+            color: #28B463;
+            font-family: sans-serif;
+            font-size: 24px;
+            animation: bounce 1s infinite;
         }
 
         @keyframes bounce {
@@ -113,72 +46,48 @@
             50% { transform: translateY(-10px); }
         }
 
-        @media (max-width: 768px) {
-            .player-container {
-                padding: 10px;
-            }
-            
-            .loading-text-words {
-                font-size: 1.5rem;
-            }
+        .player-container {
+            width: 100%;
+            height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+        }
+
+        .plyr {
+            height: 100%;
+        }
+
+        .plyr--video {
+            height: 100%;
         }
     </style>
 </head>
 <body>
     <div id="loading" class="loading">
         <div class="loading-text">
-            <span class="loading-text-words">W</span>
-            <span class="loading-text-words">a</span>
-            <span class="loading-text-words">t</span>
-            <span class="loading-text-words">c</span>
-            <span class="loading-text-words">h</span>
-            <span class="loading-text-words">a</span>
-            <span class="loading-text-words">S</span>
-            <span class="loading-text-words">p</span>
-            <span class="loading-text-words">o</span>
-            <span class="loading-text-words">r</span>
-            <span class="loading-text-words">t</span>
-            <span class="loading-text-words">s</span>
+            <span>W</span><span>a</span><span>t</span><span>c</span><span>h</span><span>a</span>
+            <span>S</span><span>p</span><span>o</span><span>r</span><span>t</span><span>s</span>
         </div>
     </div>
 
     <div class="player-container">
-        <div class="video-wrapper">
-            <video id="player" controls crossorigin playsinline>
-                <source id="m3u8-url" type="application/x-mpegURL" />
-            </video>
-            <div class="controls-overlay">
-                <select class="quality-selector" id="qualitySelector">
-                    <option value="auto">Auto</option>
-                </select>
-                <button class="quality-selector" id="statsToggle">Stats</button>
-            </div>
-            <div id="statsPanel" class="stats-panel">
-                <div>Bandwidth: <span id="bandwidth">0</span> Mbps</div>
-                <div>Buffer: <span id="buffer">0</span>s</div>
-                <div>Resolution: <span id="resolution">0x0</span></div>
-            </div>
-        </div>
+        <video id="player" controls crossorigin playsinline>
+            <source id="m3u8-url" type="application/x-mpegURL" />
+        </video>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/plyr/3.7.8/plyr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.4.10/hls.min.js"></script>
     <script>
-        // Security measures
-        document.addEventListener("contextmenu", e => e.preventDefault());
-        document.addEventListener("keydown", e => {
-            if (
-                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
-                (e.ctrlKey && e.keyCode === 85) ||
-                e.keyCode === 123 ||
-                (e.keyCode === 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey))
-            ) {
-                e.preventDefault();
-                return false;
-            }
-        });
+        // Prevent right-click
+        document.addEventListener('contextmenu', e => e.preventDefault());
 
-        // Get stream URL from query parameter
+        // Get stream URL
         const urlParams = new URLSearchParams(window.location.search);
         const streamUrl = urlParams.get('dtv');
         document.getElementById("m3u8-url").setAttribute("src", streamUrl);
@@ -186,90 +95,46 @@
         // Initialize player
         document.addEventListener("DOMContentLoaded", () => {
             const video = document.querySelector("#player");
-            const qualitySelector = document.getElementById("qualitySelector");
-            const statsToggle = document.getElementById("statsToggle");
-            const statsPanel = document.getElementById("statsPanel");
             
-            let hls;
-            
+            // Basic Plyr configuration
             const playerConfig = {
-                quality: {
-                    default: 720,
-                    options: [360, 480, 720, 1080]
-                },
-                keyboard: { focused: true, global: true },
-                tooltips: { controls: true },
-                captions: { active: true },
-                storage: { enabled: true },
-                speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 2] },
                 controls: [
-                    'play-large', 'restart', 'rewind', 'play', 'fast-forward', 'progress', 
-                    'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 
-                    'pip', 'airplay', 'fullscreen'
-                ]
+                    'play-large',
+                    'play',
+                    'progress',
+                    'current-time',
+                    'mute',
+                    'volume',
+                    'settings',
+                    'fullscreen'
+                ],
+                settings: ['quality', 'speed'],
+                speed: { selected: 1, options: [0.5, 1, 1.5, 2] },
+                quality: { default: 720, options: [360, 480, 720, 1080] }
             };
 
             if (Hls.isSupported()) {
-                hls = new Hls({
-                    maxMaxBufferLength: 60,
-                    maxBufferSize: 30 * 1000 * 1000,
+                const hls = new Hls({
                     maxBufferLength: 30,
-                    enableWorker: true,
-                    debug: false
+                    maxMaxBufferLength: 60
                 });
 
                 hls.loadSource(streamUrl);
                 hls.attachMedia(video);
-                
-                hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
-                    // Update quality selector
-                    const qualities = data.levels.map(level => ({
-                        height: level.height,
-                        bitrate: level.bitrate
-                    }));
-                    
-                    qualitySelector.innerHTML = `
-                        <option value="-1">Auto</option>
-                        ${qualities.map((q, idx) => `
-                            <option value="${idx}">${q.height}p</option>
-                        `).join('')}
-                    `;
-                    
-                    // Initialize Plyr
-                    const player = new Plyr(video, playerConfig);
-                    
-                    // Quality selection handler
-                    qualitySelector.addEventListener('change', (e) => {
-                        hls.currentLevel = parseInt(e.target.value);
-                    });
 
-                    // Stats update
-                    setInterval(() => {
-                        if (hls.currentLevel >= 0) {
-                            const level = hls.levels[hls.currentLevel];
-                            document.getElementById("bandwidth").textContent = 
-                                (hls.bandwidthEstimate / 1000000).toFixed(2);
-                            document.getElementById("buffer").textContent = 
-                                hls.media.buffered.length ? 
-                                hls.media.buffered.end(0) - hls.media.currentTime : 0;
-                            document.getElementById("resolution").textContent = 
-                                `${level.width}x${level.height}`;
-                        }
-                    }, 1000);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    const player = new Plyr(video, playerConfig);
                 });
 
-                // Error handling
+                // Basic error handling
                 hls.on(Hls.Events.ERROR, (event, data) => {
                     if (data.fatal) {
-                        switch (data.type) {
+                        switch(data.type) {
                             case Hls.ErrorTypes.NETWORK_ERROR:
                                 hls.startLoad();
                                 break;
                             case Hls.ErrorTypes.MEDIA_ERROR:
                                 hls.recoverMediaError();
-                                break;
-                            default:
-                                initPlayer();
                                 break;
                         }
                     }
@@ -277,15 +142,9 @@
             } else {
                 const player = new Plyr(video, playerConfig);
             }
-
-            // Stats toggle
-            statsToggle.addEventListener('click', () => {
-                statsPanel.style.display = 
-                    statsPanel.style.display === 'none' ? 'block' : 'none';
-            });
         });
 
-        // Loading screen
+        // Remove loading screen
         setTimeout(() => {
             document.getElementById('loading').style.display = 'none';
         }, 1500);
